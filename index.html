@@ -10,11 +10,19 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.key === 'c') {
         e.preventDefault();
     }
-body {
-    user-select: none; /* 针对大部分现代浏览器 */
-    -moz-user-select: none; /* Firefox */
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE和Edge */
+//禁止复制
+function prohibitCopying() {
+	document.oncontextmenu = function () {// 禁止右键菜单
+		return false;
+	};
+	document.onselectstart = function () {// 禁止文字选择
+		return false;
+	};
+	document.oncopy = function () {// 禁止复制
+		return false;
+	};
+	document.oncut = function () {// 禁止剪切
+		return false;
 }
 });
 </script>
