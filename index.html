@@ -3,147 +3,447 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>董太师纵横录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国贼董卓互动录</title>
     <style>
         body {
-            font-family: '楷体', cursive;
-            background: #2c0707;
+            font-family: 'Microsoft YaHei', '楷体', serif;
+            background-color: #2c0707;
             color: #ffd700;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-image: url('https://img.freepik.com/free-vector/chinese-pattern-background_53876-90035.jpg');
+            background-blend-mode: overlay;
         }
+        
         header {
             text-align: center;
             border-bottom: 3px solid #8b0000;
             padding: 20px;
+            margin-bottom: 20px;
         }
+        
+        h1 {
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
         #dongzhuo-img {
             width: 200px;
+            height: 250px;
+            object-fit: cover;
             cursor: pointer;
-            transition: transform 0.1s;
-            border: 3px solid #8b0000;
+            transition: all 0.3s;
+            border: 5px solid #8b0000;
             border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            margin: 15px 0;
         }
+        
+        #dongzhuo-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+        
+        #dongzhuo-img:active {
+            transform: scale(0.98);
+        }
+        
         .section {
-            background: rgba(139, 0, 0, 0.3);
+            background: rgba(70, 0, 0, 0.7);
             padding: 20px;
             margin: 20px 0;
             border-radius: 10px;
+            border-left: 5px solid #8b0000;
         }
+        
         button {
-            background: #8b0000;
+            background: linear-gradient(to bottom, #8b0000, #600000);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px;
+            margin: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: '楷体';
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
+        
+        button:hover {
+            background: linear-gradient(to bottom, #a00000, #700000);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        #fortune {
+            font-size: 1.3em;
+            margin: 15px 0;
+            min-height: 50px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            animation: fadeIn 0.5s;
+        }
+        
         #health-bar {
             width: 100%;
-            height: 20px;
+            height: 30px;
             background: #444;
-            border-radius: 10px;
-            margin: 10px 0;
+            border-radius: 15px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
         }
+        
         #health {
             width: 100%;
             height: 100%;
-            background: #8b0000;
-            border-radius: 10px;
+            background: linear-gradient(to right, #8b0000, #ff0000);
+            border-radius: 15px;
             transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
         }
+        
         .hidden {
             display: none;
+        }
+        
+        #battle-log {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0) }
+            25% { transform: translateX(-5px) }
+            50% { transform: translateX(5px) }
+            75% { transform: translateX(-3px) }
+            100% { transform: translateX(0) }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        .blood {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('https://www.freepnglogos.com/uploads/blood-png/blood-spatter-png-5.png') no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🐉 汉室克星 - 董太师秘录 🐉</h1>
-        <img id="dongzhuo-img" src="https://static.xxxxx.com/dongzhuo.jpg" alt="董卓画像">
+        <h1>🐉 暴君董卓互动录 🐉</h1>
+        <img id="dongzhuo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Dong_Zhuo.jpg/220px-Dong_Zhuo.jpg" alt="董卓画像">
         <p>点击画像与太师互动</p>
         <div id="health-bar">
-            <div id="health" style="width: 100%"></div>
+            <div id="health">太师威仪: 100%</div>
         </div>
     </header>
 
     <div class="section">
-        <h2>🔮 太师神力</h2>
-        <button onclick="showFortune()">求问前程</button>
-        <button onclick="startBattle()">讨伐逆贼</button>
-        <p id="fortune"></p>
+        <h2>🔮 太师神威</h2>
+        <button id="fortune-btn">求问前程</button>
+        <button id="battle-btn">讨伐逆贼</button>
+        <div id="fortune"></div>
+        
+        <div id="battle-section" class="hidden">
+            <div id="battle-log"></div>
+            <button id="attack-btn">攻击董卓</button>
+            <button id="flee-btn">落荒而逃</button>
+        </div>
     </div>
 
     <div class="section">
         <h2>📜 太师纪事</h2>
-        <p>董卓（？－192年），字仲颖，陇西临洮人。东汉末年权臣，废少帝立献帝，独揽朝政...</p>
-        <button onclick="toggleTimeline()">展开年表</button>
+        <p>董卓（？－192年），字仲颖，陇西临洮人。东汉末年权臣，废少帝立献帝，独揽朝政，残暴不仁，最终被吕布所杀。</p>
+        <button id="timeline-btn">展开年表</button>
         <ul id="timeline" class="hidden">
-            <li>184年 镇压黄巾起义</li>
-            <li>189年 入京掌权</li>
-            <li>190年 火烧洛阳</li>
-            <li>192年 殒命长安</li>
+            <li>184年 - 镇压黄巾起义</li>
+            <li>189年 - 受何进之召入京，趁机掌握朝政</li>
+            <li>190年 - 废少帝刘辩，立献帝刘协，火烧洛阳</li>
+            <li>192年 - 被司徒王允设计，义子吕布所杀</li>
         </ul>
     </div>
 
+    <div class="section">
+        <h2>🗡️ 太师语录</h2>
+        <button id="random-quote">随机语录</button>
+        <div id="quote-display" style="font-size: 1.2em; margin-top: 15px;"></div>
+    </div>
+
     <script>
-        let health = 100;
+        // 董卓语录库
         const quotes = [
             "天子？不过我家门生！",
             "西凉铁骑何在？！",
             "这洛阳...烧了也罢！",
-            "貂蝉...我的貂蝉呢？！"
-        "江山美人都是我的，我的！",  
-        "顺我者昌，逆我者亡！"
+            "貂蝉...我的貂蝉呢？！",
+            "江山美人都是我的，我的！",
+            "顺我者昌，逆我者亡！",
+            "吾儿奉先何在？",
+            "谁敢不从，立斩不赦！",
+            "汉室气数已尽，当由我取而代之！",
+            "金银财宝，尽入我囊中！"
         ];
-
-        // 点击画像互动
-        dongzhuo-img.onclick = () => {
-            const img = document.getElementById('dongzhuo-img');
-            img.style.transform = 'scale(0.95)';
-            setTimeout(() => img.style.transform = '', 100);
+        
+        // 战斗事件描述
+        const battleEvents = [
+            "吕布挥舞方天画戟向你攻来！",
+            "西凉铁骑发动冲锋！",
+            "董卓召唤弓箭手万箭齐发！",
+            "董卓暴怒，威压震慑全场！",
+            "董卓饮酒壮胆，攻击力提升！",
+            "董卓下令火烧战场！"
+        ];
+        
+        // 状态变量
+        let health = 100;
+        let isBattling = false;
+        let battleInterval;
+        
+        // DOM元素
+        const dongzhuoImg = document.getElementById('dongzhuo-img');
+        const fortuneDisplay = document.getElementById('fortune');
+        const healthDisplay = document.getElementById('health');
+        const timeline = document.getElementById('timeline');
+        const battleSection = document.getElementById('battle-section');
+        const battleLog = document.getElementById('battle-log');
+        const quoteDisplay = document.getElementById('quote-display');
+        
+        // 初始化事件监听
+        document.getElementById('fortune-btn').addEventListener('click', showFortune);
+        document.getElementById('battle-btn').addEventListener('click', startBattle);
+        document.getElementById('attack-btn').addEventListener('click', attackDongZhuo);
+        document.getElementById('flee-btn').addEventListener('click', endBattle);
+        document.getElementById('timeline-btn').addEventListener('click', toggleTimeline);
+        document.getElementById('random-quote').addEventListener('click', showRandomQuote);
+        dongzhuoImg.addEventListener('click', interactWithDongZhuo);
+        
+        // 点击董卓画像互动
+        function interactWithDongZhuo() {
+            // 视觉反馈
+            dongzhuoImg.classList.add('shake');
+            setTimeout(() => dongzhuoImg.classList.remove('shake'), 500);
             
-            const audio = new Audio('https://static.xxxxx.com/laugh.mp3');
-            audio.play();
+            // 随机语录
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            fortuneDisplay.textContent = `「${randomQuote}」`;
+            fortuneDisplay.style.display = 'block';
             
-            document.getElementById('fortune').innerHTML = 
-                `「${quotes[Math.floor(Math.random()*quotes.length)]}」`;
-        };
-
+            // 添加血迹效果
+            createBloodEffect();
+            
+            // 播放音效（使用浏览器内置声音）
+            playBattleSound();
+        }
+        
+        // 创建血迹效果
+        function createBloodEffect() {
+            const blood = document.createElement('div');
+            blood.className = 'blood';
+            blood.style.left = `${Math.random() * 100}%`;
+            blood.style.top = `${Math.random() * 100}%`;
+            blood.style.transform = `scale(${Math.random() * 0.5 + 0.5}) rotate(${Math.random() * 360}deg)`;
+            document.body.appendChild(blood);
+            
+            setTimeout(() => {
+                blood.style.opacity = '0';
+                setTimeout(() => blood.remove(), 1000);
+            }, 1000);
+        }
+        
+        // 播放战斗音效
+        function playBattleSound() {
+            const sounds = [
+                'https://www.soundjay.com/melee/sounds/sword-1.mp3',
+                'https://www.soundjay.com/melee/sounds/sword-2.mp3',
+                'https://www.soundjay.com/melee/sounds/sword-3.mp3'
+            ];
+            
+            const audio = new Audio(sounds[Math.floor(Math.random() * sounds.length)]);
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log('自动播放被阻止:', e));
+        }
+        
         // 算命功能
         function showFortune() {
-            const fortunes = ["大凶", "凶", "平", "小吉"];
-            document.getElementById('fortune').innerHTML = 
-                `🔮 卦象：${fortunes[Math.floor(Math.random()*fortunes.length)]}`;
+            const fortunes = ["大凶", "凶", "平", "小吉", "大吉"];
+            const predictions = [
+                "血光之灾，命不久矣！",
+                "官运受阻，恐有杀身之祸",
+                "平平淡淡，无功无过",
+                "小有财运，但需防小人",
+                "飞黄腾达，位极人臣！"
+            ];
+            
+            const index = Math.floor(Math.random() * fortunes.length);
+            fortuneDisplay.innerHTML = `🔮 卦象：<span style="color:${index < 2 ? 'red' : index > 3 ? '#00ff00' : 'yellow'}">${fortunes[index]}</span><br>${predictions[index]}`;
+            fortuneDisplay.style.display = 'block';
         }
-
+        
         // 展开年表
         function toggleTimeline() {
-            document.getElementById('timeline').classList.toggle('hidden');
+            timeline.classList.toggle('hidden');
+            document.getElementById('timeline-btn').textContent = 
+                timeline.classList.contains('hidden') ? '展开年表' : '收起年表';
         }
-
-        // 小游戏
+        
+        // 显示随机语录
+        function showRandomQuote() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteDisplay.innerHTML = `「${randomQuote}」`;
+            
+            // 根据语录内容改变样式
+            if(randomQuote.includes('杀') || randomQuote.includes('斩')) {
+                quoteDisplay.style.color = 'red';
+                quoteDisplay.style.textShadow = '0 0 5px red';
+            } else if(randomQuote.includes('美人') || randomQuote.includes('貂蝉')) {
+                quoteDisplay.style.color = 'pink';
+                quoteDisplay.style.textShadow = '0 0 5px pink';
+            } else {
+                quoteDisplay.style.color = '#ffd700';
+                quoteDisplay.style.textShadow = '0 0 5px #ffd700';
+            }
+        }
+        
+        // 开始战斗
         function startBattle() {
             health = 100;
+            isBattling = true;
             updateHealth();
-            alert("十八路诸侯来犯！速速迎战！");
+            battleSection.classList.remove('hidden');
+            document.getElementById('battle-btn').disabled = true;
             
-            const attackInterval = setInterval(() => {
-                health -= Math.random()*15;
+            // 清空战斗日志
+            battleLog.innerHTML = '';
+            addLogEntry("十八路诸侯来犯！董卓大怒，誓要剿灭叛贼！");
+            
+            // 自动战斗
+            battleInterval = setInterval(() => {
                 if(health <= 0) {
-                    clearInterval(attackInterval);
-                    alert("可恨！竟死于匹夫之手！");
-                    health = 0;
+                    endBattle();
+                    addLogEntry("董卓力竭不敌，被乱军所杀！汉室终得喘息之机！");
+                    return;
                 }
+                
+                // 随机事件
+                const event = battleEvents[Math.floor(Math.random() * battleEvents.length)];
+                addLogEntry(event);
+                
+                // 随机伤害
+                const damage = Math.random() * 15 + 5;
+                health -= damage;
+                if(health < 0) health = 0;
                 updateHealth();
-            }, 500);
+                
+                // 10%几率恢复
+                if(Math.random() < 0.1) {
+                    const heal = Math.random() * 10 + 5;
+                    health += heal;
+                    if(health > 100) health = 100;
+                    addLogEntry(`董卓饮酒作乐，恢复${heal.toFixed(0)}点威仪！`);
+                    updateHealth();
+                }
+            }, 1500);
         }
-
+        
+        // 攻击董卓
+        function attackDongZhuo() {
+            if(!isBattling) return;
+            
+            const damage = Math.random() * 25 + 10;
+            health -= damage;
+            if(health < 0) health = 0;
+            
+            addLogEntry(`你发动猛攻，董卓威仪减少${damage.toFixed(0)}点！`);
+            updateHealth();
+            
+            if(health <= 0) {
+                endBattle();
+                addLogEntry("董卓被你斩杀！天下太平！");
+            }
+            
+            // 视觉反馈
+            dongzhuoImg.classList.add('shake');
+            setTimeout(() => dongzhuoImg.classList.remove('shake'), 500);
+            playBattleSound();
+        }
+        
+        // 结束战斗
+        function endBattle() {
+            isBattling = false;
+            clearInterval(battleInterval);
+            battleSection.classList.add('hidden');
+            document.getElementById('battle-btn').disabled = false;
+            
+            if(health <= 0) {
+                addLogEntry("战斗结束！董卓已死！");
+            } else {
+                addLogEntry("你选择撤退，董卓大笑嘲讽！");
+            }
+        }
+        
+        // 更新血条
         function updateHealth() {
-            document.getElementById('health').style.width = `${health}%`;
+            healthDisplay.style.width = `${health}%`;
+            healthDisplay.textContent = `太师威仪: ${health.toFixed(0)}%`;
+            
+            // 根据血量改变颜色
+            if(health > 70) {
+                healthDisplay.style.background = 'linear-gradient(to right, #8b0000, #ff0000)';
+            } else if(health > 30) {
+                healthDisplay.style.background = 'linear-gradient(to right, #a52a2a, #ff4500)';
+            } else {
+                healthDisplay.style.background = 'linear-gradient(to right, #800000, #ff0000)';
+            }
         }
+        
+        // 添加战斗日志
+        function addLogEntry(text) {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = text;
+            battleLog.appendChild(entry);
+            battleLog.scrollTop = battleLog.scrollHeight;
+        }
+        
+        // 初始化显示一条随机语录
+        showRandomQuote();
     </script>
 </body>
 </html>
