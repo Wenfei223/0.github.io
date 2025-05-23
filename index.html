@@ -1,1 +1,150 @@
-己禁止
+ 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>董太师纵横录</title>
+    <style>
+        body {
+            font-family: '楷体', cursive;
+            background: #2c0707;
+            color: #ffd700;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            border-bottom: 3px solid #8b0000;
+            padding: 20px;
+        }
+        #dongzhuo-img {
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            border: 3px solid #8b0000;
+            border-radius: 10px;
+        }
+        .section {
+            background: rgba(139, 0, 0, 0.3);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        button {
+            background: #8b0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #health-bar {
+            width: 100%;
+            height: 20px;
+            background: #444;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        #health {
+            width: 100%;
+            height: 100%;
+            background: #8b0000;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🐉 汉室克星 - 董太师秘录 🐉</h1>
+        <img id="dongzhuo-img" src="https://static.xxxxx.com/dongzhuo.jpg" alt="董卓画像">
+        <p>点击画像与太师互动</p>
+        <div id="health-bar">
+            <div id="health" style="width: 100%"></div>
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>🔮 太师神力</h2>
+        <button onclick="showFortune()">求问前程</button>
+        <button onclick="startBattle()">讨伐逆贼</button>
+        <p id="fortune"></p>
+    </div>
+
+    <div class="section">
+        <h2>📜 太师纪事</h2>
+        <p>董卓（？－192年），字仲颖，陇西临洮人。东汉末年权臣，废少帝立献帝，独揽朝政...</p>
+        <button onclick="toggleTimeline()">展开年表</button>
+        <ul id="timeline" class="hidden">
+            <li>184年 镇压黄巾起义</li>
+            <li>189年 入京掌权</li>
+            <li>190年 火烧洛阳</li>
+            <li>192年 殒命长安</li>
+        </ul>
+    </div>
+
+    <script>
+        let health = 100;
+        const quotes = [
+            "天子？不过我家门生！",
+            "西凉铁骑何在？！",
+            "这洛阳...烧了也罢！",
+            "貂蝉...我的貂蝉呢？！"
+        "江山美人都是我的，我的！",  
+        "顺我者昌，逆我者亡！"
+        ];
+
+        // 点击画像互动
+        dongzhuo-img.onclick = () => {
+            const img = document.getElementById('dongzhuo-img');
+            img.style.transform = 'scale(0.95)';
+            setTimeout(() => img.style.transform = '', 100);
+            
+            const audio = new Audio('https://static.xxxxx.com/laugh.mp3');
+            audio.play();
+            
+            document.getElementById('fortune').innerHTML = 
+                `「${quotes[Math.floor(Math.random()*quotes.length)]}」`;
+        };
+
+        // 算命功能
+        function showFortune() {
+            const fortunes = ["大凶", "凶", "平", "小吉"];
+            document.getElementById('fortune').innerHTML = 
+                `🔮 卦象：${fortunes[Math.floor(Math.random()*fortunes.length)]}`;
+        }
+
+        // 展开年表
+        function toggleTimeline() {
+            document.getElementById('timeline').classList.toggle('hidden');
+        }
+
+        // 小游戏
+        function startBattle() {
+            health = 100;
+            updateHealth();
+            alert("十八路诸侯来犯！速速迎战！");
+            
+            const attackInterval = setInterval(() => {
+                health -= Math.random()*15;
+                if(health <= 0) {
+                    clearInterval(attackInterval);
+                    alert("可恨！竟死于匹夫之手！");
+                    health = 0;
+                }
+                updateHealth();
+            }, 500);
+        }
+
+        function updateHealth() {
+            document.getElementById('health').style.width = `${health}%`;
+        }
+    </script>
+</body>
+</html>
+ 
